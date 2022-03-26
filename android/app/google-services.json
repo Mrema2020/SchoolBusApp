@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "591521367200",
+    "project_id": "bus-manager-21304",
+    "storage_bucket": "bus-manager-21304.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591521367200:android:c3a9040eefa6383ac575c5",
+        "android_client_info": {
+          "package_name": "com.example.bus_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591521367200-ap1u6ah6rv2j3br37n51l5mdrretfu0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMcU9FcDhC2zYG5d5rm-Uu9QylQPTvPog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591521367200-ap1u6ah6rv2j3br37n51l5mdrretfu0p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591521367200:android:e7dc53f33130c7a4c575c5",
+        "android_client_info": {
+          "package_name": "com.example.kwanza_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591521367200-ap1u6ah6rv2j3br37n51l5mdrretfu0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMcU9FcDhC2zYG5d5rm-Uu9QylQPTvPog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591521367200-ap1u6ah6rv2j3br37n51l5mdrretfu0p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
