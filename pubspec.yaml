@@ -42,14 +42,26 @@ dependencies:
   dio: ^4.0.4
   google_fonts:
   geolocator: ^8.2.0
-  cloud_firestore: ^3.1.10
-  location: ^4.3.0
+  cloud_firestore: any
+  # location: any
+  flutter_launcher_icons: ^0.9.1
+  js: any
+  settings_ui: ^2.0.2
+  firebase_database: any
+  location: ^4.2.0
   
 
+
+ 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_icons: 
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/schoolbus.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -74,9 +86,12 @@ flutter:
     - assets/elly.png
     - assets/destination_map_marker.png
     - assets/driving_pin.png
-    - assets/background1.jpg
-    - assets/background2.jpg
-    - assets/background3.jpg
+    - assets/schoolbus.png
+    - assets/routebus.png
+    - assets/securitybus.png
+    - assets/busdriver.png
+    - assets/house.png
+    - assets/bustrack.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

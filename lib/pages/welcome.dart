@@ -1,276 +1,133 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kwanza_app/authentication/login.dart';
+import 'package:kwanza_app/pages/home.dart';
+import 'package:kwanza_app/pages/items.dart';
+import 'package:kwanza_app/pages/mappage.dart';
 
-
-class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
-
+class WelcomeScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class MapPageState extends State<MapPage> {
-  late BitmapDescriptor pinLocationIcon1;
-  late BitmapDescriptor pinLocationIcon2;
-  final Set<Marker> _markers = {};
-  final Completer<GoogleMapController> _controller = Completer();
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  List<Widget> slides = items
+      .map((item) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.0),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Image.asset(
+                  item['image'],
+                  fit: BoxFit.fitWidth,
+                  width: 220.0,
+                  alignment: Alignment.bottomCenter,
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(item['header'],
+                          style: TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.w300,
+                              color: Color.fromARGB(255, 49, 121, 230),
+                              height: 2.0)),
+                      Text(
+                        item['description'],
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 124, 113, 113),
+                            letterSpacing: 1.2,
+                            fontSize: 16.0,
+                            height: 1.3),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )))
+      .toList();
+
+  List<Widget> indicator() => List<Widget>.generate(
+      slides.length,
+      (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 3.0),
+            height: 10.0,
+            width: 10.0,
+            decoration: BoxDecoration(
+                color: currentPage.round() == index
+                    ? Color(0XFF256075)
+                    : Color(0XFF256075).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10.0)),
+          ));
+
+  double currentPage = 0.0;
+  final _pageViewController = new PageController();
 
   @override
   void initState() {
     super.initState();
-    setCustomMapPin();
-  }
-
-  void setCustomMapPin() async {
-    pinLocationIcon1 = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(devicePixelRatio: 1.5),
-        'assets/driving_pin.png');
-    pinLocationIcon2 = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(devicePixelRatio: 1.5),
-        'assets/destination_map_marker.png');
+    _pageViewController.addListener(() {
+      setState(() {
+        currentPage = _pageViewController.page!;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    LatLng pinPosition1 = const LatLng(-6.756370, 39.240800);
-    LatLng pinPosition2 = const LatLng(37.3797536, -122.1017334);
-
-    // these are the minimum required values to set
-    // the camera position
-    CameraPosition initialLocation =
-        CameraPosition(zoom: 16, bearing: 30, target: pinPosition1);
-
-    return GoogleMap(
-        mapType: MapType.normal,
-        trafficEnabled: true,
-        myLocationEnabled: true,
-        compassEnabled: true,
-        markers: _markers,
-        initialCameraPosition: initialLocation,
-        onMapCreated: (GoogleMapController controller) {
-          controller.setMapStyle(Utils.mapStyles);
-          _controller.complete(controller);
-          setState(() {
-            _markers.add(
-              Marker(
-                markerId: const MarkerId('<MARKER_ID>'),
-                position: pinPosition1,
-                icon: pinLocationIcon1,
-              ),
-            );
-          });
-          setState(() {
-            _markers.add(
-              Marker(
-                markerId: const MarkerId('<MARKER_ID>'),
-                position: pinPosition2,
-                icon: pinLocationIcon2,
-              ),
-            );
-          });
-        });
+    return Scaffold(
+      body: Container(
+        child: Stack(
+          children: <Widget>[
+            PageView.builder(
+              controller: _pageViewController,
+              itemCount: slides.length,
+              itemBuilder: (BuildContext context, int index) {
+                return slides[index];
+              },
+            ),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 70.0),
+                  padding: EdgeInsets.symmetric(vertical: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: indicator(),
+                  ),
+                )
+                //  ),
+                )
+            // )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+          },
+          tooltip: 'Start',
+          enableFeedback: true,
+          icon: Icon(Icons.arrow_forward),
+          color: Color.fromARGB(255, 11, 119, 207),
+        ),
+        foregroundColor: Colors.blue,
+        backgroundColor: Color.fromARGB(255, 231, 192, 51),
+      ),
+    );
   }
 }
-
-class Utils {
-  static String mapStyles = '''[
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#f5f5f5"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#f5f5f5"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#bdbdbd"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#eeeeee"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#e5e5e5"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#ffffff"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dadada"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#e5e5e5"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#eeeeee"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#c9c9c9"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  }
-]''';
-}
-
-// import 'package:flutter/material.dart';
-// import 'roundbutton.dart';
-
-// class WelcomeScreen extends StatefulWidget {
-//   const WelcomeScreen({Key? key}) : super(key: key);
-
-//   @override
-//   _WelcomeScreenState createState() => _WelcomeScreenState();
-// }
-
-// class _WelcomeScreenState extends State<WelcomeScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         backgroundColor: Colors.white,
-//         body: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-//           child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: <Widget>[
-//                 RoundedButton(
-//                   colour: Colors.lightBlueAccent,
-//                   title: 'Log In',
-//                   onPressed: () {
-//                     Navigator.pushNamed(context, 'login_screen');
-//                   },
-//                 ),
-//                 RoundedButton(
-//                     colour: Colors.blueAccent,
-//                     title: 'Register',
-//                     onPressed: () {
-//                       Navigator.pushNamed(context, 'registration_screen');
-//                     }),
-//               ]),
-//         ));
-//   }
-// }
